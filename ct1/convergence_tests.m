@@ -64,7 +64,7 @@ iterations = 1000;
 
 for i = 1:iterations
 disp(sprintf('index %d', i))
-deltat = 0.01;
+deltat = 0.1;
 T = [0:deltat:1];
 MC_discr = struct();
 MC_discr.Np = 10000;
@@ -121,87 +121,3 @@ legend('error on solution','1/sqrt(N)')
 xlabel('N')
 ylabel('absolute error')
 title('error on solution vs N, \Delta t = 0.01')
-%% achterwaartse methode 
-Nd = var.debdiscr.N;
-grad = zeros(length(1:5:it_data.iterations), Nd);
-for i = 1:5:it_data.iterations
-    fprintf('index %d\n', i)
-    gradh = zeros(1,Nd);
-    for j = 1:i
-        X = load(sprintf('results/%d_Xout.mat',j), 'Xout_MC');
-        W = load(sprintf('results/%d_Wout.mat',j), 'Weights');
-        gradh = gradh + simulate_adjoint_MC(var.T, Ucell{i},W.Weights,X.Xout_MC,var.db,var.MC_discr.deltax,var.debdiscr.deltax,var.problem.nu);
-    end
-    grad((i-1)/5+1, :) = gradh./i;    
-end
-error_grad = sqrt(sum((grad - det_grad).^2,2));
-
-figure
-loglog(10000*(1:5:it_data.iterations), error_grad)
-xlabel('N')
-ylabel('absolute error')
-title('error on gradient vs N, \Delta t = 0.01')
-%zelfde figuur met minder deeltjes
-Nd = var.debdiscr.N;
-grad2 = zeros(length(1:1:100), Nd);
-for i = 1:1:200
-    fprintf('index %d\n', i)
-    gradh = zeros(1,Nd);
-    for j = 1:i
-        X = load(sprintf('results/%d_Xout.mat',j), 'Xout_MC');
-        W = load(sprintf('results/%d_Wout.mat',j), 'Weights');
-        gradh = gradh + simulate_adjoint_MC(var.T, Ucell{i},W.Weights,X.Xout_MC,var.db,var.MC_discr.deltax,var.debdiscr.deltax,var.problem.nu);
-    end
-    grad2((i-1)/1+1, :) = gradh./i;    
-end
-error_grad2 = sqrt(sum((grad2 - det_grad).^2,2));
-
-
-
-%% achterwaartse methode bias-stochastische fout
-plist = 1:2:50;
-gradcel = cell(1,length(plist));
-Nd = var.debdiscr.N;
-grad2 = zeros(length(plist), Nd);
-for i = 1:length(plist)
-    Ncomb = plist(i);
-    gradcel{i} = zeros(10, Nd);
-    fprintf('index %d\n', Ncomb)
-    for k = 1:20
-        gradh = zeros(1,Nd);
-        U_combined = zeros(length(var.T),var.MC_discr.Nxint);
-        for j = 1:Ncomb
-            % combineren oplossingen
-            index = 50*(k-1)+j;
-            Uload = load(sprintf('results/%d_Uout.mat',index));
-            U_combined = U_combined + Uload.Uout_MC;
-        end
-        U_combined = U_combined./Ncomb;
-        for j = 1:Ncomb
-            index = 50*(k-1)+j;
-            X = load(sprintf('results/%d_Xout.mat',index), 'Xout_MC');
-            W = load(sprintf('results/%d_Wout.mat',index), 'Weights');
-            gradh = gradh + simulate_adjoint_MC(var.T, U_combined,W.Weights,X.Xout_MC,var.db,var.MC_discr.deltax,var.debdiscr.deltax,var.problem.nu);
-        end
-        gradcel{i}(k,:) = gradh./Ncomb;
-    end
-end
-stdm = zeros(length(plist),Nd);
-meanm = zeros(length(plist),Nd);
-
-for i = 1:length(plist)
-    huidig = gradcel{i};
-    meanm(i,:) = mean(huidig,1);
-    stdm(i,:) = sqrt(sum((huidig-meanm(i,:)).^2,1));
-end
-meanerror = (meanm-det_grad);
-meanerrornorm = sqrt(sum(meanerror.^2,2));
-stdnorm = sqrt(sum(stdm.^2,2));
-
-figure
-loglog(1/100./sqrt(1:100))
-hold on
-loglog(meanerrornorm)
-loglog(stdnorm)
-
-
