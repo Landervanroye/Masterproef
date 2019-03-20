@@ -1,6 +1,6 @@
 clear all
 close all
-
+addpath('/home/lander/Masterproef/core')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% time estimation 
@@ -18,7 +18,7 @@ for i = 1:length(plist)
     grad_cel{2,i} = ps;
     grad_cel{3,i} = det_grad;
     for j = 1:50
-        grad_cel{1,i}(j,:)  = batched_fwd_bwd(ps.T,ps.deltat,ps.problem,ps.debdiscr, ps.MC_discr,ps.db, 10^5, plist(i));
+        grad_cel{1,i}(j,:)  = batched_fwd_bwd(ps.T,ps.deltat,ps.problem,ps.debdiscr, ps.MC_discr,ps.db, 10^4, plist(i));
     end
 end
 
