@@ -4,7 +4,7 @@ function [ DJ ] = simulate_adjoint_MC(T, U,W,X,D,deltax,deltaxp,nu)
 deltat = T(2)-T(1);
 NT = length(T);
 nbp = size(X,2);
-lambda = zeros(NT-1, nbp); %%% 
+lambda = zeros(NT-1, nbp); %%%
 DJ = zeros(size(D));
 
 for s = 1:nbp
@@ -17,10 +17,9 @@ for s = 1:nbp
         bdkm = floor(X(k-1, s)/deltaxp)+1;
         bdkmpp = floor(X(k, s)/deltaxp)+1;
         lambda(k,s) = deltat*deltax*U(k,bk) + exp(-D(bdkmpp)*deltat)*lambda(k+1,s);
-        DJ(bdkm) = DJ(bdkm) - lambda(k,s)*deltat*W(k-1,s)*exp(-D(bdkm)*deltat);    
+        DJ(bdkm) = DJ(bdkm) - lambda(k,s)*deltat*W(k-1,s)*exp(-D(bdkm)*deltat);
     end
 end
 DJ =DJ+ nu*deltaxp*D;
-
 end
 

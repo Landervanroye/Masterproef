@@ -49,6 +49,8 @@ loglog(logspace(2,6,10),10./(logspace(2,6,10)))
 xlabel('amount of particles')
 legend('std', 'bias', '1/sqrt(p)', '1/p')
 
+
+
 %%%% EXPERIMENT 2: error als ~ N, deltat, sqrt(buckets) zelfde verhouding
 plist = floor(logspace(4, 5, 10));
 grad_cel = cell(3,length(plist));
