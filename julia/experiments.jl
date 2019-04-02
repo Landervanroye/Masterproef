@@ -6,7 +6,7 @@ L = 1.0;
 N = 50;
 deltax = L/N;
 alpha = 0.01;
-nu = 0.5;
+nu = Float64(0.5);
 deltat= 0.01;
 T = Array(0:0.01:1)
 Nd = 10;
@@ -27,11 +27,15 @@ xim[2:end,:]=xim2;
 
 
 samples_beg, weights_beg =init_MC(problem,MC_discr);
+
+
 @time Uout_MC, Xout_MC, Weights = simulate_MC(T,deltat,problem,debdiscr, MC_discr,db, xim,samples_beg, weights_beg);
 @time grad =  simulate_adjoint_MC(T, Uout_MC,Weights,Xout_MC,db,MC_discr.deltax,debdiscr.deltax,problem.nu);
 
 rng = MersenneTwister(1234);
 @time Uout_MC2, samples_end, weights_end= simulate_MC_rng(T,deltat,problem,debdiscr, MC_discr,db, rng,samples_beg, weights_beg);
+
+
 rng = MersenneTwister(1234);
 @time grad2= simulate_adjoint_MC_rng(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
 rng = MersenneTwister(1234);

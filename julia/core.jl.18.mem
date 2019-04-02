@@ -1,0 +1,316 @@
+        - using Random
+        - function trapezium(y,x,i)
+  1355040     r = 0;
+        0     deltax = x[2] - x[1];
+        0     for it in 1:i
+        0         r = r + deltax * y[it];
+        -     end
+        0     r
+        - end
+        - 
+        - function simulationstep( particles,weights,dt,deltaQx, alpha,lambda, xi)
+        -     # weights
+        0     for i in 1:length(particles)
+        0         particle = particles[i];
+        0         xpos = Int64(floor(particle/deltaQx)+1);
+        0         weights[i] = weights[i]*exp(-lambda[xpos]*dt);
+        -     end
+        -     # posities
+ 80008000     particles = particles .+ sqrt(2*dt*alpha).*xi';
+        -     # randvoorwaarden
+        0     for i in 1:length(particles)
+        0         if particles[i] < 0
+        0             particles[i] = -particles[i];
+        -         end
+        0         if particles[i] > 1
+        0             particles[i] = 1-(particles[i]-1)
+        -         end
+        -     end
+     3200     particles, weights
+        - end
+        - 
+        - function simulate_MC(T,deltat,problem,debdiscr, MCdiscr,db, xim, samples_beg, weights_beg)
+ 36336564     Xbeg = MCdiscr.x;
+        0     deltax = MCdiscr.deltax;
+        0     Nxint = MCdiscr.Nxint;
+        - 
+    40528     Uout = zeros(length(T), length(Xbeg));
+        0     Uout[1,:] = pthistogram(samples_beg, deltax, weights_beg, Nxint);
+        - 
+ 80800080     Xout =zeros(length(T), length(samples_beg));
+        0     Xout[1,:] = samples_beg;
+        - 
+ 80800080     Weights =zeros(length(T), length(samples_beg));
+        0     Weights[1,:] = weights_beg;
+        - 
+   800080     samples_prev = copy(samples_beg);
+   800080     weights_prev = copy(weights_beg);
+        - 
+        0     for i in 2:length(T)
+ 80008000         xi = xim[i,:];
+        0         samples_prev, weights_prev = simulationstep(samples_prev, weights_prev, deltat,debdiscr.deltax, problem.alpha, db, xi);
+        0         Uout[i,:]= pthistogram(samples_prev, deltax, weights_prev, Nxint);
+        0         Xout[i,:] = samples_prev;
+        0         Weights[i,:] = weights_prev;
+        -     end
+       32     Uout, Xout, Weights
+        - end
+        - 
+        - 
+        - function simulate_MC_rng(T,deltat,problem,debdiscr, MCdiscr,db, randgen, samples_beg, weights_beg)
+  5482260     Xbeg = MCdiscr.x;
+        0     deltax = MCdiscr.deltax;
+        0     Nxint = MCdiscr.Nxint;
+        - 
+    40528     Uout = zeros(length(T), length(Xbeg));
+        0     Uout[1,:] = pthistogram(samples_beg, deltax, weights_beg, Nxint);
+        - 
+   800080     samples_prev = copy(samples_beg);
+   800080     weights_prev = copy(weights_beg);
+        - 
+        0     deltaQx = debdiscr.deltax;
+        0     alpha = problem.alpha;
+        0     constant = sqrt(2*deltat*alpha);
+        0     for s in 1:length(samples_prev)
+        0         weight = weights_prev[s];
+        0         particle = samples_prev[s];
+        - 
+        - 
+        0         for i in 2:length(T)
+        0             xpos = Int64(floor(particle/deltaQx)+1);
+        0             weight = weight*exp(-db[xpos]*deltat);
+        -             # posities
+        0             particle = particle + constant*randn(randgen);
+        -             # randvwdn
+        0             if particle < 0
+        0                 particle= -particle;
+        -             end
+        0             if particle> 1
+        0                 particle = 1-(particle-1)
+        -             end
+        -             #histogram
+        0             xpos = Int64(floor(particle/deltax)+1);
+        0             Uout[i,xpos] = Uout[i,xpos] + weight;
+        -         end
+        0         weights_prev[s]= weight;
+        0         samples_prev[s]= particle;
+        -     end
+       32     Uout, samples_prev, weights_prev
+        - end
+        - 
+        - 
+        - function pthistogram( parlist, deltax, weights,Nxint)
+    50592     distr = zeros(1,Nxint);
+        0     for i = 1:length(parlist)
+        0         distri = Int64(floor(parlist[i]/deltax)+1);
+        0         distr[distri] = distr[distri]+ weights[i];
+        -     end
+        0     distr
+        - end
+        - 
+        - function init_MC(problem,MCdiscr)
+124143041     beginvwdn = problem.beginvwdn;
+        0     Xbeg = MCdiscr.x;
+        0     Np = MCdiscr.Np;
+        0     deltax = MCdiscr.deltax;
+        -     Nxint = MCdiscr.Nxint;
+        - 
+       16     norm = trapezium(beginvwdn, Xbeg,length(Xbeg));
+        0     gewicht = norm/Np/deltax;
+        - 
+   141813     cum = zeros(size(Xbeg));
+        0     for i = 1:length(Xbeg)
+     3184         cum[i] = trapezium(beginvwdn,Xbeg, i)/norm;
+        -     end
+        - 
+   800080     samples_beg = zeros(1,Np);
+  1600160     weights_beg = gewicht.*ones(1,Np);
+        - 
+        0     for i = 1:Np
+  3193408         samples_beg[i] = sample(MCdiscr.nodes, cum);
+        -     end
+       32     samples_beg, weights_beg
+        - end
+        - 
+        - function sample(nodes, cum)
+  1457561     randi = rand();
+        0     if randi == 1
+        0         samp = nodes[end];
+        -     else
+        -         i = 1;
+        0         while randi>=cum[i]
+        0             i = i+1;
+        -         end
+        0         if i == 1
+        -             cumbeg = 0;
+        -         else
+        0             cumbeg = cum[i-1];
+        -         end
+        0         cumeind = cum[i];
+        0         samp = nodes[i] + (randi - cumbeg)/(cumeind-cumbeg)*(nodes[i+1]- nodes[i]);
+        0         if samp < 0
+        0             print("problem")
+        -         end
+        -     end
+        0     samp
+        - end
+        - 
+        - function simulate_adjoint_MC(T, U,W,X,D,deltax,deltaxp,nu)
+ 18590506     deltat = T[2]-T[1];
+        0     NT = length(T);
+        0     nbp = size(X,2);
+ 80800080     lambda = zeros(NT, nbp);
+      160     DJ = zeros(size(D));
+        - 
+        0     for s = 1:nbp
+        0         bNT = Int64(floor(X[NT, s]/deltax)+1);
+        0         bdkm = Int64(floor(X[NT-1, s]/deltaxp)+1);
+        0         lambda[NT, s]= deltat*deltax*U[NT,bNT];
+        0         DJ[bdkm] = DJ[bdkm] - lambda[NT, s]*deltat*W[NT-1,s]*exp(-D[bdkm]*deltat);
+        0         for k = NT-1:-1:2
+        0             bk = Int64(floor(X[k, s]/deltax)+1);
+        0             bdkm = Int64(floor(X[k-1, s]/deltaxp)+1);
+        0             bdkmpp = Int64(floor(X[k, s]/deltaxp)+1);
+        0             lambda[k,s] = deltat*deltax*U[k,bk] + exp(-D[bdkmpp]*deltat)*lambda[k+1,s];
+        0             DJ[bdkm] = DJ[bdkm] - lambda[k,s]*deltat*W[k-1,s]*exp(-D[bdkm]*deltat);
+        -         end
+        -     end
+      160     DJ =DJ.+ nu*deltaxp.*D;
+        0     DJ
+        - end
+        - 
+        - function simulate_adjoint_MC_rng(T,U,D,samples_beg, weights_beg, randgen,deltax,deltaxp,nu, problem, debdiscr, MC_discr)
+  7439675     deltat = T[2]-T[1];
+        0     NT = length(T);
+        0     nbp = length(samples_beg);
+      160     DJ = zeros(size(D));
+        -     Np = MC_discr.Np;
+      896     X = zeros(length(T));
+      896     W = zeros(length(T));
+        - 
+        0     deltaQx = debdiscr.deltax;
+        0     alpha = problem.alpha;
+        0     constant = sqrt(2*deltat*alpha);
+        0     for s = 1:nbp
+        0         X[1] = samples_beg[s];
+        0         W[1] = weights_beg[s];
+        0         for i in 2:length(T)
+        0             particle = X[i-1];
+        0             xpos = Int64(floor(particle/deltaQx)+1);
+1120003504             W[i] = W[i-1]*exp(-db[xpos]*deltat);
+        -             # posities
+        0             X[i] = X[i-1] + constant*randn(randgen);
+        -             # randvwdn
+        0             if X[i] < 0
+        0                 X[i] = -X[i];
+        -             end
+        0             if X[i] > 1
+        0                 X[i] = 1-(X[i]-1)
+        -             end
+        -         end
+        - 
+        -         # adjoint
+        - 
+        0         bNT = Int64(floor(X[NT]/deltax)+1);
+        0         bdkm = Int64(floor(X[NT-1]/deltaxp)+1);
+        0         lambda= deltat*deltax*U[NT,bNT];
+        0         DJ[bdkm] = DJ[bdkm] - lambda*deltat*W[NT-1]*exp(-D[bdkm]*deltat);
+        0         for k = NT-1:-1:2
+        0             xk =X[k];
+        0             xkmin1=X[k-1];
+        0             wkmin1 = W[k-1];
+        0             bk = Int64(floor(xk/deltax)+1);
+        0             bdkm = Int64(floor(xkmin1/deltaxp)+1);
+        0             bdkmpp = Int64(floor(xk/deltaxp)+1);
+        0             lambda = deltat*deltax*U[k,bk] + exp(-D[bdkmpp]*deltat)*lambda;
+        0             DJ[bdkm] = DJ[bdkm] - lambda*deltat*wkmin1*exp(-D[bdkm]*deltat);
+        -         end
+        -     end
+      160     DJ =DJ.+ nu*deltaxp.*D;
+        0     DJ
+        - end
+        - 
+        - 
+        - function simulate_adjoint_MC_rng_alt(T,U,D,samples_beg, weights_beg, randgen,deltax,deltaxp,nu::Float64, problem, debdiscr, MC_discr)
+  7181369     deltat = T[2]-T[1];
+        0     NT = length(T);
+        0     nbp = length(samples_beg);
+      160     DJ = zeros(size(D));
+        -     Np = MC_discr.Np;
+      896     X = zeros(length(T))::Array{Float64};
+      896     W = zeros(length(T))::Array{Float64};
+        - 
+        0     deltaQx = debdiscr.deltax;
+        0     alpha = problem.alpha;
+        0     constant = sqrt(2*deltat*alpha);
+        0     for s = 1:nbp
+        0         particle = samples_beg[s];
+        0         weight = weights_beg[s];
+        - 
+        - 
+        0         X[1] = particle;
+        0         W[1] = weight;
+        0         for i in 2:length(T)
+        0             xpos = Int64(floor(particle/deltaQx)+1);
+160000000             weight = weight::Float64*exp(-db[xpos]::Float64*deltat::Float64)::Float64;
+        - 
+        -             # posities
+        0             particle = particle::Float64 + constant::Float64*randn(randgen)::Float64;
+        -             # randvwdn
+        0             if particle < 0
+        0                 particle = -particle;
+        -             end
+        0             if particle > 1
+        0                 particle = 1-(particle-1);
+        -             end
+        0             X[i] = particle;
+        0             W[i] = weight;
+        -         end
+        - 
+        -         # adjoint
+        - 
+        0         bNT = Int64(floor(X[NT]/deltax)+1);
+        0         bdkm = Int64(floor(X[NT-1]/deltaxp)+1);
+        0         lambda= deltat*deltax*U[NT,bNT];
+        0         DJ[bdkm] = DJ[bdkm] - lambda*deltat*W[NT-1]*exp(-D[bdkm]*deltat);
+        0         for k = NT-1:-1:2
+        0             xk =X[k];
+        0             xkmin1=X[k-1];
+        0             wkmin1 = W[k-1];
+        0             bk = Int64(floor(xk/deltax)+1);
+        0             bdkm = Int64(floor(xkmin1/deltaxp)+1);
+        0             bdkmpp = Int64(floor(xk/deltaxp)+1);
+        0             lambda = deltat*deltax*U[k,bk] + exp(-D[bdkmpp]*deltat)*lambda;
+        0             DJ[bdkm] = DJ[bdkm] - lambda*deltat*wkmin1*exp(-D[bdkm]*deltat);
+        -         end
+        -     end
+      160     DJ =DJ.+ nu::Float64*deltaxp::Float64.*D;
+        0     DJ
+        - end
+        - 
+        - struct xdiscr_obj
+    42423     deltax::Float64
+        -     N::Int64
+        -     x::Array{Float64}
+        - end
+        - 
+        - struct debdiscr_obj
+    42199     deltax::Float64
+        -     N::Int64
+        -     x::Array{Float64}
+        - end
+        - 
+        - struct problem_obj
+135833275     nu::Float64
+        -     alpha::Float64
+        -     beginvwdn::Array{Float64}
+        - end
+        - 
+        - struct MC_discr_obj
+   920415     Np::Int64
+        -     deltax::Float64
+        -     x::Array{Float64}
+        -     nodes::Array{Float64}
+        -     Nxint::Int64
+        - end
+        - 

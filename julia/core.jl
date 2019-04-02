@@ -74,6 +74,8 @@ function simulate_MC_rng(T,deltat,problem,debdiscr, MCdiscr,db, randgen, samples
     for s in 1:length(samples_prev)
         weight = weights_prev[s];
         particle = samples_prev[s];
+
+
         for i in 2:length(T)
             xpos = Int64(floor(particle/deltaQx)+1);
             weight = weight*exp(-db[xpos]*deltat);
@@ -229,28 +231,31 @@ function simulate_adjoint_MC_rng(T,U,D,samples_beg, weights_beg, randgen,deltax,
 end
 
 
-function simulate_adjoint_MC_rng_alt(T,U,D,samples_beg, weights_beg, randgen,deltax,deltaxp,nu, problem, debdiscr, MC_discr)
-    deltat = T[2]-T[1];
+function simulate_adjoint_MC_rng_alt(T,U,D,samples_beg::Array{Float64}, weights_beg::Array{Float64}, randgen,deltax::Float64,deltaxp::Float64,nu::Float64, problem, debdiscr, MC_discr)
+    deltat = (T[2]-T[1])::Float64;
     NT = length(T);
     nbp = length(samples_beg);
-    DJ = zeros(size(D));
+    DJ = zeros(size(D))::Array{Float64};
     Np = MC_discr.Np;
-    X = zeros(length(T));
-    W = zeros(length(T));
+    X = zeros(length(T))::Array{Float64};
+    W = zeros(length(T))::Array{Float64};
 
-    deltaQx = debdiscr.deltax;
-    alpha = problem.alpha;
-    constant = sqrt(2*deltat*alpha);
+    deltaQx = debdiscr.deltax::Float64;
+    alpha = problem.alpha::Float64;
+    constant = sqrt(2*deltat*alpha)::Float64;
     for s = 1:nbp
         particle = samples_beg[s];
-        weight = weights_beg[s];
+        weight = weights_beg[s]::Float64;
+
+
         X[1] = particle;
         W[1] = weight;
         for i in 2:length(T)
-            xpos = Int64(floor(particle/deltaQx)+1);
-            weight = weight*exp(-db[xpos]*deltat);
+            xpos = Int64(floor(particle::Float64/deltaQx::Float64)+1);
+            weight::Float64 = (weight::Float64)*exp((-db[xpos::Int64]::Float64*deltat::Float64)::Float64)::Float64;
+
             # posities
-            particle = particle + constant*randn(randgen);
+            particle = particle::Float64 + constant::Float64*randn(randgen)::Float64;
             # randvwdn
             if particle < 0
                 particle = -particle;
@@ -275,11 +280,11 @@ function simulate_adjoint_MC_rng_alt(T,U,D,samples_beg, weights_beg, randgen,del
             bk = Int64(floor(xk/deltax)+1);
             bdkm = Int64(floor(xkmin1/deltaxp)+1);
             bdkmpp = Int64(floor(xk/deltaxp)+1);
-            lambda = deltat*deltax*U[k,bk] + exp(-D[bdkmpp]*deltat)*lambda;
-            DJ[bdkm] = DJ[bdkm] - lambda*deltat*wkmin1*exp(-D[bdkm]*deltat);
+            lambda = deltat::Float64*deltax::Float64*U[k,bk]::Float64 + exp(-D[bdkmpp]::Float64*deltat::Float64)::Float64*lambda::Float64;
+            DJ[bdkm] = DJ[bdkm]::Float64 - lambda::Float64*deltat::Float64*wkmin1::Float64*exp((-D[bdkm]::Float64*deltat::Float64)::Float64)::Float64;
         end
     end
-    DJ =DJ.+ nu*deltaxp.*D;
+    DJ =DJ.+ nu::Float64*deltaxp::Float64.*D;
     DJ
 end
 
