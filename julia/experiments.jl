@@ -1,7 +1,23 @@
 
 using Random
 include("core.jl")
-MC_discr = MC_discr_obj(100000, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
+
+L = 1.0;
+N = 50;
+deltax = L/N;
+alpha = 0.01;
+nu = 0.5;
+deltat= 0.01;
+T = Array(0:0.01:1)
+Nd = 10;
+deltaxd = L/Nd;
+db = Array(range(0.0, stop=0.1, length=Nd));
+xdiscrx = Array(range(deltax/2,stop = (L-deltax/2),length=N));
+BEGINVWDN = cos.((xdiscrx*2*pi/L)).+1.1;
+problem = problem_obj(nu, alpha, BEGINVWDN);
+debdiscr = debdiscr_obj(deltaxd, Nd, Array(range(deltaxd/2,stop = (L-deltaxd/2),length=Nd)));
+xdiscr = xdiscr_obj(deltax, N, Array(range(deltax/2, stop = L-deltax/2, length = N)));
+MC_discr = MC_discr_obj(10^5, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
 rng = MersenneTwister(1234);
 
 ## wat gepruts om random getallen beide implementaties overéén te laten komen
