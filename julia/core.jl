@@ -1,3 +1,4 @@
+using Random
 function trapezium(y,x,i)
     r = 0;
     deltax = x[2] - x[1];
@@ -42,8 +43,8 @@ function simulate_MC(T,deltat,problem,debdiscr, MCdiscr,db, xim, samples_beg, we
     Weights =zeros(length(T), length(samples_beg));
     Weights[1,:] = weights_beg;
 
-    samples_prev = samples_beg;
-    weights_prev = weights_beg;
+    samples_prev = copy(samples_beg);
+    weights_prev = copy(weights_beg);
 
     for i in 2:length(T)
         xi = xim[i,:];
@@ -54,6 +55,47 @@ function simulate_MC(T,deltat,problem,debdiscr, MCdiscr,db, xim, samples_beg, we
     end
     Uout, Xout, Weights
 end
+
+
+function simulate_MC_rng(T,deltat,problem,debdiscr, MCdiscr,db, randgen, samples_beg, weights_beg)
+    Xbeg = MCdiscr.x;
+    deltax = MCdiscr.deltax;
+    Nxint = MCdiscr.Nxint;
+
+    Uout = zeros(length(T), length(Xbeg));
+    Uout[1,:] = pthistogram(samples_beg, deltax, weights_beg, Nxint);
+
+    samples_prev = copy(samples_beg);
+    weights_prev = copy(weights_beg);
+
+    deltaQx = debdiscr.deltax;
+    alpha = problem.alpha;
+    constant = sqrt(2*deltat*alpha);
+    for s in 1:length(samples_prev)
+        weight = weights_prev[s];
+        particle = samples_prev[s];
+        for i in 2:length(T)
+            xpos = Int64(floor(particle/deltaQx)+1);
+            weight = weight*exp(-db[xpos]*deltat);
+            # posities
+            particle = particle + constant*randn(randgen);
+            # randvwdn
+            if particle < 0
+                particle= -particle;
+            end
+            if particle> 1
+                particle = 1-(particle-1)
+            end
+            #histogram
+            xpos = Int64(floor(particle/deltax)+1);
+            Uout[i,xpos] = Uout[i,xpos] + weight;
+        end
+        weights_prev[s]= weight;
+        samples_prev[s]= particle;
+    end
+    Uout, samples_prev, weights_prev
+end
+
 
 function pthistogram( parlist, deltax, weights,Nxint)
     distr = zeros(1,Nxint);
@@ -135,7 +177,111 @@ function simulate_adjoint_MC(T, U,W,X,D,deltax,deltaxp,nu)
     DJ
 end
 
+function simulate_adjoint_MC_rng(T,U,D,samples_beg, weights_beg, randgen,deltax,deltaxp,nu, problem, debdiscr, MC_discr)
+    deltat = T[2]-T[1];
+    NT = length(T);
+    nbp = length(samples_beg);
+    DJ = zeros(size(D));
+    Np = MC_discr.Np;
+    X = zeros(length(T));
+    W = zeros(length(T));
 
+    deltaQx = debdiscr.deltax;
+    alpha = problem.alpha;
+    constant = sqrt(2*deltat*alpha);
+    for s = 1:nbp
+        X[1] = samples_beg[s];
+        W[1] = weights_beg[s];
+        for i in 2:length(T)
+            particle = X[i-1];
+            xpos = Int64(floor(particle/deltaQx)+1);
+            W[i] = W[i-1]*exp(-db[xpos]*deltat);
+            # posities
+            X[i] = X[i-1] + constant*randn(randgen);
+            # randvwdn
+            if X[i] < 0
+                X[i] = -X[i];
+            end
+            if X[i] > 1
+                X[i] = 1-(X[i]-1)
+            end
+        end
+
+        # adjoint
+
+        bNT = Int64(floor(X[NT]/deltax)+1);
+        bdkm = Int64(floor(X[NT-1]/deltaxp)+1);
+        lambda= deltat*deltax*U[NT,bNT];
+        DJ[bdkm] = DJ[bdkm] - lambda*deltat*W[NT-1]*exp(-D[bdkm]*deltat);
+        for k = NT-1:-1:2
+            xk =X[k];
+            xkmin1=X[k-1];
+            wkmin1 = W[k-1];
+            bk = Int64(floor(xk/deltax)+1);
+            bdkm = Int64(floor(xkmin1/deltaxp)+1);
+            bdkmpp = Int64(floor(xk/deltaxp)+1);
+            lambda = deltat*deltax*U[k,bk] + exp(-D[bdkmpp]*deltat)*lambda;
+            DJ[bdkm] = DJ[bdkm] - lambda*deltat*wkmin1*exp(-D[bdkm]*deltat);
+        end
+    end
+    DJ =DJ.+ nu*deltaxp.*D;
+    DJ
+end
+
+
+function simulate_adjoint_MC_rng_alt(T,U,D,samples_beg, weights_beg, randgen,deltax,deltaxp,nu, problem, debdiscr, MC_discr)
+    deltat = T[2]-T[1];
+    NT = length(T);
+    nbp = length(samples_beg);
+    DJ = zeros(size(D));
+    Np = MC_discr.Np;
+    X = zeros(length(T));
+    W = zeros(length(T));
+
+    deltaQx = debdiscr.deltax;
+    alpha = problem.alpha;
+    constant = sqrt(2*deltat*alpha);
+    for s = 1:nbp
+        particle = samples_beg[s];
+        weight = weights_beg[s];
+        X[1] = particle;
+        W[1] = weight;
+        for i in 2:length(T)
+            xpos = Int64(floor(particle/deltaQx)+1);
+            weight = weight*exp(-db[xpos]*deltat);
+            # posities
+            particle = particle + constant*randn(randgen);
+            # randvwdn
+            if particle < 0
+                particle = -particle;
+            end
+            if particle > 1
+                particle = 1-(particle-1);
+            end
+            X[i] = particle;
+            W[i] = weight;
+        end
+
+        # adjoint
+
+        bNT = Int64(floor(X[NT]/deltax)+1);
+        bdkm = Int64(floor(X[NT-1]/deltaxp)+1);
+        lambda= deltat*deltax*U[NT,bNT];
+        DJ[bdkm] = DJ[bdkm] - lambda*deltat*W[NT-1]*exp(-D[bdkm]*deltat);
+        for k = NT-1:-1:2
+            xk =X[k];
+            xkmin1=X[k-1];
+            wkmin1 = W[k-1];
+            bk = Int64(floor(xk/deltax)+1);
+            bdkm = Int64(floor(xkmin1/deltaxp)+1);
+            bdkmpp = Int64(floor(xk/deltaxp)+1);
+            lambda = deltat*deltax*U[k,bk] + exp(-D[bdkmpp]*deltat)*lambda;
+            DJ[bdkm] = DJ[bdkm] - lambda*deltat*wkmin1*exp(-D[bdkm]*deltat);
+        end
+    end
+    DJ =DJ.+ nu*deltaxp.*D;
+    DJ
+end
 
 struct xdiscr_obj
     deltax::Float64
@@ -179,9 +325,3 @@ BEGINVWDN = cos.((xdiscrx*2*pi/L)).+1.1;
 problem = problem_obj(nu, alpha, BEGINVWDN);
 debdiscr = debdiscr_obj(deltaxd, Nd, Array(range(deltaxd/2,stop = (L-deltaxd/2),length=Nd)));
 xdiscr = xdiscr_obj(deltax, N, Array(range(deltax/2, stop = L-deltax/2, length = N)));
-
-MC_discr = MC_discr_obj(1000000, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
-xim = randn(length(T), MC_discr.Np);
-samples_beg, weights_beg =init_MC(problem,MC_discr);
-Uout_MC, Xout_MC, Weights = simulate_MC(T,deltat,problem,debdiscr, MC_discr,db, xim,samples_beg, weights_beg);
-grad =  simulate_adjoint_MC(T, Uout_MC,Weights,Xout_MC,db,MC_discr.deltax,debdiscr.deltax,problem.nu);
