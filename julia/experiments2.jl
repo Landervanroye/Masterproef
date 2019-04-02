@@ -18,6 +18,7 @@ v = range(2,stop=7,length=50);
 plist = [10^(i) for i in v];
 gradsave = zeros(50,10)
 for i in 1:length(plist)
+    print(i,"   p = ", plist[i])
     plisti = plist[i]
     deltat= 0.01;
     T = Array(0:0.01:1)
@@ -46,6 +47,7 @@ deltatlist = [10^(-i) for i in v];
 gradsave = zeros(50,10)
 
 for i in 1:length(deltatlist)
+    print(i, ,"   t = ",  deltatlist[i])
     deltat= deltatlist[i];
     T = Array(0:deltat:1)
     MC_discr = MC_discr_obj(10^6, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
