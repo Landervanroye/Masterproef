@@ -1,7 +1,7 @@
 using MAT
 include("core.jl")
 
-buckets = Int64(ARGS[0]);
+buckets = parse(Int64,ARGS[1]);
 print(buckets)
 
 L = 1.0;
@@ -38,7 +38,7 @@ for i in 1:length(deltatlist)
         grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
         gradsave[i,:] = grad;
     end
-    file = matopen(string("expr4res/b_", buckets, "gradt", i, ".mat"), "w")
+    file = matopen(string("exp4res/b_", buckets, "gradt", i, ".mat"), "w")
 
     write(file, "gradsave", gradsave)
     close(file)
