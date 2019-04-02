@@ -18,11 +18,11 @@ v = range(2,stop=7,length=50);
 plist = [10^(i) for i in v];
 gradsave = zeros(50,10)
 for i in 1:length(plist)
-    print(i,"   p = ", plist[i])
+    print(i,"   p = ", plist[i], "\n")
     plisti = plist[i]
     deltat= 0.01;
     T = Array(0:0.01:1)
-    MC_discr = MC_discr_obj(int64(floor(plisti)), deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
+    MC_discr = MC_discr_obj(Int64(floor(plisti)), deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
     for j = 1:50
         samples_beg, weights_beg =init_MC(problem,MC_discr);
 
@@ -33,7 +33,7 @@ for i in 1:length(plist)
         grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
         gradsave[i,:] = grad;
     end
-    file = matopen(string("gradp", i, ".mat"), "w")
+    file = matopen(string("exp2res/gradp", i, ".mat"), "w")
     write(file, "gradsave", gradsave)
     close(file)
 end
@@ -43,12 +43,12 @@ end
 
 
 v = range(1,stop=3,length=20);
-deltatlist = [10^(-i) for i in v];
+deltatlist = [10^(i) for i in v];
 gradsave = zeros(50,10)
 
 for i in 1:length(deltatlist)
-    print(i, ,"   t = ",  deltatlist[i])
-    deltat= deltatlist[i];
+    print(i, ,"   t = ",  deltatlist[i], , "\n")
+    deltat= 1/deltatlist[i];
     T = Array(0:deltat:1)
     MC_discr = MC_discr_obj(10^6, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
     for j = 1:50
@@ -61,7 +61,7 @@ for i in 1:length(deltatlist)
         grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
         gradsave[i,:] = grad;
     end
-    file = matopen(string("gradt", i, ".mat"), "w")
+    file = matopen(string("exp2res/gradt", i, ".mat"), "w")
     write(file, "gradsave", gradsave)
     close(file)
 end
