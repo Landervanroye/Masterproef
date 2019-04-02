@@ -20,7 +20,7 @@ deltatlist = [10^(i) for i in v];
 gradsave = zeros(50,10);
 
 for i in 1:length(deltatlist)
-    print(i,"   t = ",  deltatlist[i], , "\n");
+    print(i,"   t = ",  deltatlist[i] , "\n");
     deltat= 1/deltatlist[i];
     T = Array(0:deltat:1);
     MC_discr = MC_discr_obj(10^6, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
