@@ -22,7 +22,7 @@ for i in 1:length(plist)
     plisti = plist[i]
     deltat= 0.01;
     T = Array(0:0.01:1)
-    MC_discr = MC_discr_obj(plisti, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
+    MC_discr = MC_discr_obj(int64(floor(plisti)), deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
     for j = 1:50
         samples_beg, weights_beg =init_MC(problem,MC_discr);
 
