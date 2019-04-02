@@ -17,12 +17,12 @@ xdiscr = xdiscr_obj(deltax, N, Array(range(deltax/2, stop = L-deltax/2, length =
 
 v = range(1,stop=3,length=20);
 deltatlist = [10^(i) for i in v];
-gradsave = zeros(50,10)
+gradsave = zeros(50,10);
 
 for i in 1:length(deltatlist)
-    print(i, ,"   t = ",  deltatlist[i], , "\n")
+    print(i,"   t = ",  deltatlist[i], , "\n");
     deltat= 1/deltatlist[i];
-    T = Array(0:deltat:1)
+    T = Array(0:deltat:1);
     MC_discr = MC_discr_obj(10^6, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
     for j = 1:50
         samples_beg, weights_beg =init_MC(problem,MC_discr);

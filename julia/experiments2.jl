@@ -17,7 +17,7 @@ xdiscr = xdiscr_obj(deltax, N, Array(range(deltax/2, stop = L-deltax/2, length =
 
 v = range(2,stop=7,length=50);
 plist = [10^(i) for i in v];
-gradsave = zeros(50,10)
+gradsave = zeros(50,10);
 for i in 1:length(plist)
     print(i,"   p = ", plist[i], "\n")
     plisti = plist[i]
