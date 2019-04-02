@@ -1,4 +1,5 @@
 using MAT
+include("core.jl")
 L = 1.0;
 N = 50;
 deltax = L/N;
