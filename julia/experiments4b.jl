@@ -36,7 +36,7 @@ for i in 1:length(deltatlist)
 
         rng = MersenneTwister(1234+100*i+j);
         grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
-        gradsave[i,:] = grad;
+        gradsave[j,:] = grad;
     end
     file = matopen(string("exp4res/b_", buckets, "gradt", i, ".mat"), "w")
 
