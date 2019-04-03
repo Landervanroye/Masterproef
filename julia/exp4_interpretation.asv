@@ -1,0 +1,57 @@
+close all
+clear all
+det_grad = load('grad_nauwkeurig.mat', 'det_grad');
+%det_grad = load('grad_100.mat', 'det_grad');
+
+det_grad = det_grad.det_grad;
+
+
+%% toenemend aantal deeltjes T = 0:01:1, buckets = 100,200,400,800
+
+bucketlist = [100,200,400,800];
+figure
+for bucketi = 1:length(bucketlist)
+buckets = bucketlist(bucketi);    
+
+plist = logspace(2,7,50);
+stdevlist = zeros(size(plist));
+biaslist = zeros(size(plist));
+for i = 1:50
+    gradmat = load(sprintf('exp4res/b_%igradp%i.mat',buckets, i), 'gradsave');
+    gradmat = gradmat.gradsave;
+    meangrad = mean(gradmat,1);
+    devgrad = sqrt(sum((gradmat-meangrad).^2,1));
+    stdevlist(i) = norm(devgrad);
+    biaslist(i) = norm(meangrad-det_grad);
+end
+loglog(plist, stdevlist)
+hold on
+loglog(plist, biaslist)
+end
+legend('100 std', '100 bias', '200 std', '200 bias','400 std', '400 bias','800 std', '800 bias')
+
+
+
+%% toenemend aantal tijdstappen p = 10^6, buckets = 100,200,400,800
+
+bucketlist = [100,200,400,800];
+figure
+for bucketi = 1:length(bucketlist)
+buckets = bucketlist(bucketi);    
+
+plist = logspace(2,7,50);
+stdevlist = zeros(size(plist));
+biaslist = zeros(size(plist));
+for i = 1:50
+    gradmat = load(sprintf('exp4res/b_%igradp%i.mat',buckets, i), 'gradsave');
+    gradmat = gradmat.gradsave;
+    meangrad = mean(gradmat,1);
+    devgrad = sqrt(sum((gradmat-meangrad).^2,1));
+    stdevlist(i) = norm(devgrad);
+    biaslist(i) = norm(meangrad-det_grad);
+end
+loglog(plist, stdevlist)
+hold on
+loglog(plist, biaslist)
+end
+legend('100 std', '100 bias', '200 std', '200 bias','400 std', '400 bias','800 std', '800 bias')
