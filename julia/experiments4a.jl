@@ -1,5 +1,5 @@
 using MAT
-
+# in dit experiment wordt de invloed van het aantal deeltjes bekeken (deltat = 0.01)
 buckets = parse(Int64,ARGS[1]);
 print(buckets)
 

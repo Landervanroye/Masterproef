@@ -2,6 +2,8 @@
 using Random
 include("core.jl")
 
+#wat correctheidstesten en snelheidstesten
+
 L = 1.0;
 N = 50;
 deltax = L/N;

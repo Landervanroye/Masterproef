@@ -1,5 +1,7 @@
 using MAT
 include("core.jl")
+# OUDE VERSIE VAN EXPERIMENT 4
+
 L = 1.0;
 N = 50;
 deltax = L/N;
