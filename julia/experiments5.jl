@@ -9,8 +9,8 @@ alpha = 0.01;
 nu = 0.5;
 Nd = 10;
 deltaxd = L/Nd;
-#db = Array(range(0.0, stop=0.1, length=Nd));
-db = [1.2397    1.0841    0.8199    0.5471    0.3815    0.3815    0.5471    0.8199    1.0841    1.2397];
+db = Array(range(0.0, stop=0.1, length=Nd));
+#db = [1.2397    1.0841    0.8199    0.5471    0.3815    0.3815    0.5471    0.8199    1.0841    1.2397];
 
 xdiscrx = Array(range(deltax/2,stop = (L-deltax/2),length=N));
 BEGINVWDN = cos.((xdiscrx*2*pi/L)).+1.1;
