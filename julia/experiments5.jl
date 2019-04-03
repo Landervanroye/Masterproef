@@ -27,7 +27,7 @@ for i in 1:length(lrlist)
     poskeep = zeros(1000,10);
     poskeep[1,:] = db';
     print(i, "\n");
-    for j = 2:10000
+    for j = 2:1000
         samples_beg, weights_beg =init_MC(problem,MC_discr);
 
         rng = MersenneTwister(1234+100000*i+j);
