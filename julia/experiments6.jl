@@ -1,7 +1,6 @@
 #### stel fout ~c1*sqrt(1/N) + c2*(Δt)² -> Δt =cte* N^(-1/4) (0.01/2000^(-0.25)) = cte bij 100 buckets zie experiments4)
-cte = (0.01/2000^(-0.25));
+cte = (0.01/1000^(-0.25));
 using MAT
-# in dit experiment wordt de invloed van het aantal deeltjes bekeken (deltat = 0.01)
 buckets = 100;
 print(buckets)
 
