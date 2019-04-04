@@ -32,7 +32,7 @@ for i in 1:length(plist)
     plisti = plist[i]
     deltat = (cte*N^(-1/4));
     timesteps = floor(1/deltat);
-    deltat = 1/timestps;
+    deltat = 1/timesteps;
     T = Array(0:deltat:1);
     MC_discr = MC_discr_obj(Int64(floor(plisti)), deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
     for j = 1:1
