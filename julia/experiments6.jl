@@ -24,7 +24,7 @@ xdiscr = xdiscr_obj(deltax, N, Array(range(deltax/2, stop = L-deltax/2, length =
 
 v = range(2,stop=8,length=50);
 plist = [10^(i) for i in v];
-gradsave = zeros(1,10);
+gradsave = zeros(50,10);
 
 
 for i in 1:length(plist)
@@ -35,7 +35,7 @@ for i in 1:length(plist)
     deltat = 1/timesteps;
     T = Array(0:deltat:1);
     MC_discr = MC_discr_obj(Int64(floor(plisti)), deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
-    for j = 1:1
+    for j = 1:50
         samples_beg, weights_beg =init_MC(problem,MC_discr);
 
         rng = MersenneTwister(1234+100*i+j);
