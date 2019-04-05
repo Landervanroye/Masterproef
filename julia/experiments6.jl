@@ -21,7 +21,7 @@ debdiscr = debdiscr_obj(deltaxd, Nd, Array(range(deltaxd/2,stop = (L-deltaxd/2),
 xdiscr = xdiscr_obj(deltax, N, Array(range(deltax/2, stop = L-deltax/2, length = N)));
 
 
-v = range(2,stop=8,length=50);
+v = range(2,stop=7,length=50);
 plist = [10^(i) for i in v];
 gradsave = zeros(50,10);
 
