@@ -29,7 +29,7 @@ gradsave = zeros(50,10);
 for i in 1:length(plist)
     print(i,"   p = ", plist[i], "\n")
     plisti = plist[i]
-    deltat = (cte*N^(-1/4));
+    deltat = (cte*plisti^(-1/4));
     timesteps = floor(1/deltat);
     deltat = 1/timesteps;
     T = Array(0:deltat:1);
