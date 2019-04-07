@@ -45,7 +45,7 @@ for i in 1:length(plist)
         grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
         gradsave[j,:] = grad;
     end
-    file = matopen(string("exp6res/b_", buckets, "gradpt", i, ".mat"), "w")
+    file = matopen(string("exp8res/b_", buckets, "gradpt", i, ".mat"), "w")
     write(file, "gradsave", gradsave)
     close(file)
 end
