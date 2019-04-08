@@ -9,7 +9,7 @@ alpha = 0.01;
 nu = 0.5;
 Nd = 10;
 deltaxd = L/Nd;
-db = Array(range(0.0, stop=0.1, length=Nd));
+#db = Array(range(0.0, stop=0.1, length=Nd));
 #db = [1.2397    1.0841    0.8199    0.5471    0.3815    0.3815    0.5471    0.8199    1.0841    1.2397];
 db = [0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8];
 xdiscrx = Array(range(deltax/2,stop = (L-deltax/2),length=N));
@@ -39,7 +39,7 @@ for i in 1:length(lrlist)
         grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
 
         poskeep[j,:] = poskeep[j-1] .- lr*grad';
-        db = poskeep[j,:];
+        db[:] = poskeep[j,:];
     end
 
     file = matopen(string("exp5res/poskeep", i, ".mat"), "w")
