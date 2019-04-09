@@ -1,4 +1,3 @@
-# in dit experiment wordt de SGD met een vaste leanring rate, voor verschillende learning rates. We starten van ongeveer het optimum
 
 using MAT
 include("core.jl")
@@ -20,30 +19,23 @@ xdiscr = xdiscr_obj(deltax, N, Array(range(deltax/2, stop = L-deltax/2, length =
 deltat= 0.01;
 T = Array(0:0.01:1)
 MC_discr = MC_discr_obj(10^4, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
-
 v = range(0,stop=3,length=20);
 lrlist = [10^(-i) for i in v];
-
 for i in 1:length(lrlist)
     lr = lrlist[i];
     poskeep = zeros(5000,10);
-    db = copy(dbor);
-    poskeep[1,:] = db';
-
+    dbtemp = copy(db);
+    poskeep[1,:] = dbtemp';
     print(i, "\n");
     for j = 2:5000
         samples_beg, weights_beg =init_MC(problem,MC_discr);
-
         rng = MersenneTwister(1234+100000*i+j);
-        Uout_MC2, samples_end, weights_end= simulate_MC_rng(T,deltat,problem,debdiscr, MC_discr,db, rng,samples_beg, weights_beg);
-
+        Uout_MC2, samples_end, weights_end= simulate_MC_rng(T,deltat,problem,debdiscr, MC_discr,dbtemp, rng,samples_beg, weights_beg);
         rng = MersenneTwister(1234+100000*i+j);
-        grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
-
+        grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2,dbtemp,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
         poskeep[j,:] = poskeep[j-1,:] .- lr*grad';
-        db[:] = poskeep[j,:];
+        dbtemp[:] = poskeep[j,:];
     end
-
     file = matopen(string("exp5res/poskeep", i, ".mat"), "w")
     write(file, "poskeep", poskeep)
     close(file)
