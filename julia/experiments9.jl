@@ -51,7 +51,7 @@ for i in 1:length(plist)
     T = Array(0:0.01:1)
     MC_discr = MC_discr_obj(Int64(floor(plisti)), deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
     for j = 1:50
-        print(j, "\n")
+        samples_beg, weights_beg =init_MC(problem,MC_discr);
         seed = 1234+100*i+j;
         optimres = optimize(d-> f(d, seed, deltat, problem, debdiscr, MC_discr, samples_beg, weights_beg), (G,d) -> g!(G, d, seed, deltat, problem, debdiscr, MC_discr, samples_beg, weights_beg), db, ConjugateGradient(), Optim.Options(show_trace =false));
         optimsave[j,:] = optimres.minimizer;
