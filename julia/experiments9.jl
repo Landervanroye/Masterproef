@@ -24,28 +24,19 @@ xdiscr = xdiscr_obj(deltax, N, Array(range(deltax/2, stop = L-deltax/2, length =
 
 
 
-MC_discr = MC_discr_obj(10^5, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
-samples_beg, weights_beg =init_MC(problem,MC_discr);
-
-seed = 1234;
-function f(d)
+function f(d, seed, deltat, problem, debdiscr, MC_discr, samples_beg, weights_beg)
     rng = MersenneTwister(seed);
     Uout, samples_end, weights_end= simulate_MC_rng(T,deltat,problem,debdiscr, MC_discr,d, rng,samples_beg, weights_beg);
     result = evalF(Uout, d, xdiscr, debdiscr, problem, T);
     return result
 end
 
-function g!(G, d)
+function g!(G, d, seed, deltat, problem, debdiscr, MC_discr, samples_beg, weights_beg)
     rng = MersenneTwister(seed);
     Uout_MC, samples_end, weights_end= simulate_MC_rng(T,deltat,problem,debdiscr, MC_discr,d, rng,samples_beg, weights_beg);
     rng = MersenneTwister(seed);
     G[:]= simulate_adjoint_MC_rng_alt(T,Uout_MC,d,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
 end
-
-
-@time f(db)
-G = zeros(1,10);
-@time g!(G,db)
 
 
 v = range(2,stop=5,length=50);
@@ -60,8 +51,9 @@ for i in 1:length(plist)
     T = Array(0:0.01:1)
     MC_discr = MC_discr_obj(Int64(floor(plisti)), deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
     for j = 1:50
+        print(j, "\n")
         seed = 1234+100*i+j;
-        optimres = optimize(f, g!, db, ConjugateGradient(), Optim.Options(show_trace =false));
+        optimres = optimize(d-> f(d, seed, deltat, problem, debdiscr, MC_discr, samples_beg, weights_beg), (G,d) -> g!(G, d, seed, deltat, problem, debdiscr, MC_discr, samples_beg, weights_beg), db, ConjugateGradient(), Optim.Options(show_trace =false));
         optimsave[j,:] = optimres.minimizer;
     end
     file = matopen(string("exp9res/b_", buckets, "optim", i, ".mat"), "w")
