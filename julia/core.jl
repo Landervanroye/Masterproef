@@ -288,10 +288,33 @@ function simulate_adjoint_MC_rng_alt(T,U,D,samples_beg::Array{Float64}, weights_
     DJ
 end
 
+function dotp(a,b)
+    sum = 0;
+    for i = 1:length(a)
+        sum = sum + a[i]*b[i]
+    end
+    sum
+end
+
+function evalF(Uout, d, xdiscr, debdiscr, problem, T)
+deltax = xdiscr.deltax;
+nu = problem.nu;
+deltaxp = debdiscr.deltax;
+deltat = T[2]-T[1];
+
+r= 0.5*deltaxp*nu*dotp(d,d);
+for i2 = 1:(length(T))
+    r = r + deltat*0.5*(dotp(Uout[i2,:],Uout[i2,:])deltax);
+end
+r
+end
+
 struct xdiscr_obj
     deltax::Float64
     N::Int64
     x::Array{Float64}
+
+
 end
 
 struct debdiscr_obj
