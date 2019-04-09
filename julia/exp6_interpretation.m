@@ -21,7 +21,7 @@ secondgrad = zeros(1,50);
 thirdgrad = zeros(1,50);
 fourthgrad = zeros(1,50);
 
-for i = 1:5
+for i = 1:50
     gradmat = load(sprintf('exp6res/b_%igradpt%i.mat',buckets, i), 'gradsave');
     gradmat = gradmat.gradsave;
     meangrad = mean(gradmat,1);
