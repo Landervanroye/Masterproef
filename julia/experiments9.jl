@@ -1,5 +1,5 @@
 ### experiments on correlated sampling
-
+using MAT
 using Optim
 using Random
 include("core.jl")
