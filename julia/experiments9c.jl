@@ -57,7 +57,7 @@ for i in 1:length(plist)
         optimres = optimize(d-> f(d, seed, deltat, problem, debdiscr, MC_discr, samples_beg, weights_beg), (G,d) -> g!(G, d, seed, deltat, problem, debdiscr, MC_discr, samples_beg, weights_beg), db, ConjugateGradient(), Optim.Options(show_trace =false));
         optimsave[j,:] = optimres.minimizer;
     end
-    file = matopen(string("exp9bres/b_", buckets, "optim", i, ".mat"), "w")
+    file = matopen(string("exp9cres/b_", buckets, "optim", i, ".mat"), "w")
     write(file, "optimsave", optimsave)
     close(file)
 end
