@@ -38,7 +38,7 @@ for i in 1:length(lrlist)
         rng = MersenneTwister(1234+100000*i+j);
         grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
 
-        poskeep[j,:] = poskeep[j-1] .- lr*grad';
+        poskeep[j,:] = poskeep[j-1,:] .- lr*grad';
         db[:] = poskeep[j,:];
     end
 
