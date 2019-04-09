@@ -1,6 +1,6 @@
-#### stel fout ~c1*sqrt(1/N) + c2*(Δt)² -> Δt =cte* N^(-1/4) (0.01/2000^(-0.25)) = cte bij 100 buckets zie experiments4)
-### zie ook experiments8
-cte = (0.01/1000^(-0.25));
+#### stel fout ~c1*sqrt(1/N) + c2*(Δt) -> Δt =cte* N^(-1/2) (0.01/2000^(-0.5)) = cte bij 100 buckets zie experiments4)
+## niet gebruikt, zie experiments8!
+cte = (0.01/1000^(-0.5));
 using MAT
 buckets = 100;
 print(buckets)
@@ -30,7 +30,7 @@ gradsave = zeros(50,10);
 for i in 1:length(plist)
     print(i,"   p = ", plist[i], "\n")
     plisti = plist[i]
-    deltat = (cte*plisti^(-1/4));
+    deltat = (cte*plisti^(-1.0/2.0));
     timesteps = floor(1/deltat);
     deltat = 1/timesteps;
     T = Array(0:deltat:1);

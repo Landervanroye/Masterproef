@@ -40,9 +40,10 @@ rng = MersenneTwister(1234);
 
 rng = MersenneTwister(1234);
 @time grad2= simulate_adjoint_MC_rng(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
+
 rng = MersenneTwister(1234);
 @time grad2= simulate_adjoint_MC_rng_alt(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
-
+@time evalF(Uout_MC2, db, xdiscr, debdiscr, problem, T)
 #
 #MC_discr = MC_discr_obj(10^7, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
 #samples_beg, weights_beg =init_MC(problem,MC_discr);
