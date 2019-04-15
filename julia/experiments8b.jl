@@ -1,6 +1,6 @@
 #### stel fout ~c1*sqrt(1/N) + c2*(Δt) -> Δt =cte* N^(-1/2) (0.01/2000^(-0.5)) = cte bij 100 buckets zie experiments4)
-### zie ook experiments8
-cte = (0.01/1000^(-0.5));
+### zie ook experiments8 GROTERE CONSTANTE!!!
+cte = 10*(0.01/1000^(-0.5));
 using MAT
 buckets = 100;
 print(buckets)
@@ -27,7 +27,7 @@ plist = [10^(i) for i in v];
 gradsave = zeros(50,10);
 
 
-for i in 46:length(plist)
+for i in 1:length(plist)
     print(i,"   p = ", plist[i], "\n")
     plisti = plist[i]
     deltat = (cte*plisti^(-0.5));
@@ -45,7 +45,7 @@ for i in 46:length(plist)
         grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
         gradsave[j,:] = grad;
     end
-    file = matopen(string("exp8res/b_", buckets, "gradpt", i, ".mat"), "w")
+    file = matopen(string("exp8bres/b_", buckets, "gradpt", i, ".mat"), "w")
     write(file, "gradsave", gradsave)
     close(file)
 end
