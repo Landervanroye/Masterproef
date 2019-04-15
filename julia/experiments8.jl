@@ -27,7 +27,7 @@ plist = [10^(i) for i in v];
 gradsave = zeros(50,10);
 
 
-for i in 1:length(plist)
+for i in 46:length(plist)
     print(i,"   p = ", plist[i], "\n")
     plisti = plist[i]
     deltat = (cte*plisti^(-0.5));
