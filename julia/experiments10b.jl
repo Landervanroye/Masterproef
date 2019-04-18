@@ -22,7 +22,7 @@ xdiscr = xdiscr_obj(deltax, N, Array(range(deltax/2, stop = L-deltax/2, length =
 
 v = range(1,stop=3,length=20);
 deltatlist = [10^(i) for i in v];
-solsave = zeros(50,10);
+solsave = zeros(50,buckets);
 
 for i in 1:length(deltatlist)
     print(i,"   t = ",  deltatlist[i] , "\n");
