@@ -1,5 +1,6 @@
 using MAT
 # in dit experiment wordt de invloed van het aantal deeltjes bekeken (deltat = 0.01)
+# OP DE OPLOSSING
 buckets = parse(Int64,ARGS[1]);
 print(buckets)
 
@@ -22,7 +23,7 @@ xdiscr = xdiscr_obj(deltax, N, Array(range(deltax/2, stop = L-deltax/2, length =
 
 v = range(2,stop=7,length=50);
 plist = [10^(i) for i in v];
-solsave = zeros(50,10);
+solsave = zeros(50,buckets);
 
 
 for i in 1:length(plist)

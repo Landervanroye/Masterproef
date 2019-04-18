@@ -1,7 +1,7 @@
 using MAT
 include("core.jl")
 # in dit experiment wordt de invloed van het aantal tijdstappen bekeken (10^6 deeltjes)
-
+# OP DE OPLOSSING
 buckets = parse(Int64,ARGS[1]);
 print(buckets)
 
