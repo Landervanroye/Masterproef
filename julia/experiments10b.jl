@@ -28,7 +28,7 @@ for i in 1:length(deltatlist)
     print(i,"   t = ",  deltatlist[i] , "\n");
     deltat= 1/floor(deltatlist[i]);
     T = Array(0:deltat:1);
-    MC_discr = MC_discr_obj(10^6, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
+    MC_discr = MC_discr_obj(10^7, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
     for j = 1:50
         samples_beg, weights_beg =init_MC(problem,MC_discr);
 
@@ -37,7 +37,7 @@ for i in 1:length(deltatlist)
         sol = Uout_MC2[end,:];
         solsave[j,:] = sol;
     end
-    file = matopen(string("exp10res/b_", buckets, "gradt", i, ".mat"), "w")
+    file = matopen(string("exp10res/b_", buckets, "solt", i, ".mat"), "w")
 
     write(file, "solsave", solsave)
     close(file)
