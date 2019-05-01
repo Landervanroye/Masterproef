@@ -1,0 +1,24 @@
+exp4a: -> opnieuw uitgevoerd want iets fout? - invloed aantal deeltjes op fout gradient, aantal buckets als argument in commandline tussen e2 en e7 deeltjes
+exp4b: invloed aantal tijdstappen op fout gradient, aantal buckets als argument in commandline tussen e2 en e7 deeltjes
+exp4c: invloed aantal deeltjes op fout gradient, aantal buckets als argument in commandline tussen e2 en e4 deeltjes
+exp4d: -> WIP 10^7 deeltjes, 1000 tijdstappen, 1 keer
+
+
+exp5: sgd (constant lr) voor verschillende lr, e4 deeltjes
+exp5b: sgd (constant lr) voor één lr, e5 deeltjes
+
+exp6: conv gradient stel fout ~c1*sqrt(1/N) + c2*(?t)²
+exp6b: conv gradient stel fout ~c1*sqrt(1/N) + c2*(?t)² -> grotere constante
+
+exp7: conv gradient stel fout ~c1*sqrt(1/N) + c2*(?t) -> nog niet klaar (server2) + zou niet gebruikt worden, verschil met exp8??
+
+exp8: conv gradient stel fout stel fout ~c1*sqrt(1/N) + c2*(?t) -> nog niet klaar, server3?
+exp8b: grote constante
+exp8c: nog grotere constante
+
+exp9: correlated sampling
+exp9b: correlated sampling meer deeltjes
+exp9c: correlated sampling nog meer deeltjes, 1 keer
+
+exp10b: oplossing ifv deeltjes
+exp10b: oplossing ifv tijdsstap
