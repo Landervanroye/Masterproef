@@ -197,7 +197,7 @@ function simulate_adjoint_MC_rng(T,U,D,samples_beg, weights_beg, randgen,deltax,
         for i in 2:length(T)
             particle = X[i-1];
             xpos = Int64(floor(particle/deltaQx)+1);
-            W[i] = W[i-1]*exp(-db[xpos]*deltat);
+            W[i] = W[i-1]*exp(-D[xpos]*deltat);
             # posities
             X[i] = X[i-1] + constant*randn(randgen);
             # randvwdn
@@ -252,7 +252,7 @@ function simulate_adjoint_MC_rng_alt(T,U,D,samples_beg::Array{Float64}, weights_
         W[1] = weight;
         for i in 2:length(T)
             xpos = Int64(floor(particle::Float64/deltaQx::Float64)+1);
-            weight::Float64 = (weight::Float64)*exp((-db[xpos::Int64]::Float64*deltat::Float64)::Float64)::Float64;
+            weight::Float64 = (weight::Float64)*exp((-D[xpos::Int64]::Float64*deltat::Float64)::Float64)::Float64;
 
             # posities
             particle = particle::Float64 + constant::Float64*randn(randgen)::Float64;
