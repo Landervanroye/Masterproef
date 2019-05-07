@@ -8,13 +8,14 @@ include("core.jl")
 #v = range(2,stop=7,length=50);
 #plist = [10^(i) for i in v];
 plist = [10^6];
-solsave = zeros(50,10);
 
 
 for z in 1:length(bucketlist)
     i =1;
     L = 1.0;
     buckets = bucketlist[z];
+    solsave = zeros(50,buckets);
+
     N = buckets;
     deltax = L/N;
     alpha = 0.01;
