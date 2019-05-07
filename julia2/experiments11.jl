@@ -14,7 +14,7 @@ gradsave = zeros(50,10);
 for z in 1:length(bucketlist)
     i =1;
     L = 1.0;
-    buckets = bucketlist[i];
+    buckets = bucketlist[z];
     N = buckets;
     deltax = L/N;
     alpha = 0.01;
@@ -42,7 +42,7 @@ for z in 1:length(bucketlist)
         Uout_MC2, samples_end, weights_end= simulate_MC_rng(T,deltat,problem,debdiscr, MC_discr,db, rng,samples_beg, weights_beg);
 
         rng = MersenneTwister(1234+100*z+j);
-        grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2,db,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
+        grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2, db ,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
         gradsave[j,:] = grad;
     end
     file = matopen(string("exp11res/b_", buckets, "gradp", i, ".mat"), "w")

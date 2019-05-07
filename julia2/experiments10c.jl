@@ -14,7 +14,7 @@ solsave = zeros(50,10);
 for z in 1:length(bucketlist)
     i =1;
     L = 1.0;
-    buckets = bucketlist[i];
+    buckets = bucketlist[z];
     N = buckets;
     deltax = L/N;
     alpha = 0.01;
