@@ -5,7 +5,7 @@ using Random
 include("core.jl")
 
 #wat correctheidstesten en snelheidstesten
-buckets = 100;
+buckets = 500;
 L = 1.0;
 N = 50;
 deltax = L/N;
