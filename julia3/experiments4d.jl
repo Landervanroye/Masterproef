@@ -20,7 +20,7 @@ debdiscr = debdiscr_obj(deltaxd, Nd, Array(range(deltaxd/2,stop = (L-deltaxd/2),
 xdiscr = xdiscr_obj(deltax, N, Array(range(deltax/2, stop = L-deltax/2, length = N)));
 
 
-v = range(1,stop=2,length=20);
+v = range(1,stop=2,length=40);
 deltatlist = [10^(i) for i in v];
 gradsave = zeros(50,10);
 
