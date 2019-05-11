@@ -28,7 +28,7 @@ for i in 1:length(deltatlist)
     print(i,"   t = ",  deltatlist[i] , "\n");
     deltat= 10/floor(deltatlist[i]);
     T = Array(0:deltat:10);
-    MC_discr = MC_discr_obj(10^6, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
+    MC_discr = MC_discr_obj(10^7, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
     for j = 1:50
         samples_beg, weights_beg =init_MC(problem,MC_discr);
 
