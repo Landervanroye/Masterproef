@@ -21,11 +21,10 @@ for i = 1:length(plist)
     Nlist[i] = Int64(ceil(b*Np^(2.0/3)));
     Nblist[i] = Int64(ceil(a*Np^(1.0/3)));
 end
-print(Nlist)
 for z in 1:length(plist)
     i =1;
     L = 1.0;
-    buckets = int64(Nblist[z]);
+    buckets = Int64(Nblist[z]);
     N = buckets;
     deltax = L/N;
     alpha = 0.01;
