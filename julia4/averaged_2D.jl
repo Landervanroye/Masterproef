@@ -37,8 +37,10 @@ for i in 1:length(lrlist)
         grad= simulate_adjoint_MC_rng_alt_2D(T,Uout_MC2,dbtemp,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
         poskeep[j,:,:] = poskeep[j-1,:,:] .- lr*grad;
         dbtemp[:,:] = poskeep[j,:,:];
-        file = matopen(string("exp5res/poskeep", j, ".mat"), "w")
-        write(file, "poskeep", poskeep)
-        close(file)
+        if j%100 ==0
+            file = matopen(string("exp5res/poskeep", j, ".mat"), "w")
+            write(file, "poskeep", poskeep)
+            close(file)
+        end
     end
 end
