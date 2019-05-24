@@ -19,7 +19,7 @@ deltat= 0.01;
 T = Array(0:0.02:1);
 deeltjes = 10^5;
 MC_discr = MC_discr_obj(deeltjes, deltax, xdiscr.x, Array(range(0,stop=L, length = N+1)), xdiscr.N)
-lrlist = [1];
+lrlist = [1].0];
 for i in 1:length(lrlist)
     lr = lrlist[i];
     poskeep = zeros(5000,10,10);
