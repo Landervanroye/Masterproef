@@ -106,7 +106,7 @@ function simulate_adjoint_MC_rng_alt_2D(T,U,D,samples_beg::Array{Float64}, weigh
         bdkmx = Int64(floor(X[1,NT-1]/deltaxp)+1);
         bdkmy = Int64(floor(X[2,NT-1]/deltaxp)+1);
 
-        lambda= 0.5*deltat*deltax*U[NT,bNTx,bNTy];
+        lambda= 0.5*deltat*deltax*deltax*U[NT,bNTx,bNTy];
         DJ[bdkmx, bdkmy] = DJ[bdkmx, bdkmy] - lambda*deltat*W[NT-1]*exp(-D[bdkmx, bdkmy]*deltat);
         for k = NT-1:-1:2
             xkx =X[1,k];
@@ -120,7 +120,7 @@ function simulate_adjoint_MC_rng_alt_2D(T,U,D,samples_beg::Array{Float64}, weigh
             bky = Int64(floor(xky/deltax)+1);
 
             bdkmx = Int64(floor(xkmin1x/deltaxp)+1);
-            bdkmy = Int64(floor(xkmin1x/deltaxp)+1);
+            bdkmy = Int64(floor(xkmin1y/deltaxp)+1);
 
             bdkmppx = Int64(floor(xkx/deltaxp)+1);
             bdkmppy = Int64(floor(xky/deltaxp)+1);
