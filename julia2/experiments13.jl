@@ -85,7 +85,7 @@ while z < length(plist)
     rng = MersenneTwister(1234+seed);
     grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2, db ,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
 
-    file = matopen(string("exp13res/grad", grad, ".mat"), "w")
+    file = matopen(string("exp13res/grad", seed, ".mat"), "w")
     write(file, "grad", grad)
     close(file)
 
