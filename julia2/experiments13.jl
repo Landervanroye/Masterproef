@@ -36,7 +36,7 @@ end
 db = [0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8];
 poskeep = db;
 gradv = zeros(size(db));
-j = 0;
+j = 1;
 stationary = false;
 gempos = zeros(size(db));
 seed = 1;
@@ -49,6 +49,7 @@ while z < length(plist)
     global stationary;
     global db;
     global gradv;
+    global gempos;
     file = matopen(string("exp13res/poskeep", seed, ".mat"), "w")
     write(file, "poskeep", poskeep)
     close(file)
@@ -86,17 +87,18 @@ while z < length(plist)
 
     rng = MersenneTwister(1234+seed);
     grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2, db ,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
-
     file = matopen(string("exp13res/grad", seed, ".mat"), "w")
     write(file, "grad", grad)
     close(file)
-
-    db = db .- lrlist[z]*grad';
+    print(size(db))
+    print(size(grad))
+    db = db .- lrlist[z]*grad;
 
     if stationary
         gempos = gempos + db/500;
         j = j+1;
     end
+
     if !stationary && dotp(gradv, grad) < 0
         j = 0;
         gempos = zeros(size(db));
