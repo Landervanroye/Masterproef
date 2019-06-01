@@ -21,7 +21,7 @@ Nblist = zeros(size(plist));
 lr = 1.0;
 Np = Np0;
 
-for i = 1:10
+for i = 1:100
     global Np;
     global lr;
     plist[i] = Int64(Np);
