@@ -100,6 +100,7 @@ while z < length(plist)
         gempos = zeros(size(db));
         stationary = true;
     end
+    gradv = grad;
     if stationary && j == 500
         db = gempos;
         file = matopen(string("exp13res/gempos", seed, ".mat"), "w")
