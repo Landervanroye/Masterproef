@@ -110,10 +110,12 @@ while z < length(plist)
         file = matopen(string("exp13res/gempos", seed, ".mat"), "w")
         write(file, "gempos", gempos)
         close(file)
+        gradv = zeros(size(db));
         gempos = zeros(size(db));
         stationary = false;
         j = 1;
         z = z+1;
+
     end
 
     seed = seed + 1;
