@@ -54,7 +54,7 @@ while z < length(plist)
     write(file, "poskeep", poskeep)
     close(file)
 
-    info = [z,j,lrist[z],stationary];
+    info = [z,j,lrlist[z],stationary];
     file = matopen(string("exp13res/info", seed, ".mat"), "w")
     write(file, "info", info)
     close(file)
