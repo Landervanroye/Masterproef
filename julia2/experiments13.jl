@@ -47,6 +47,7 @@ while z < length(plist)
     global j;
     global stationary;
     global db;
+    gradv = zeros(size(db));
     file = matopen(string("exp13res/poskeep", seed, ".mat"), "w")
     write(file, "poskeep", poskeep)
     close(file)
