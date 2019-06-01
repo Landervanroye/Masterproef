@@ -41,13 +41,14 @@ stationary = false;
 gempos = zeros(size(db));
 seed = 1;
 z=1;
+gradv = zeros(size(db));
 while z < length(plist)
     global z;
     global seed;
     global j;
     global stationary;
     global db;
-    gradv = zeros(size(db));
+    global gradv;
     file = matopen(string("exp13res/poskeep", seed, ".mat"), "w")
     write(file, "poskeep", poskeep)
     close(file)
