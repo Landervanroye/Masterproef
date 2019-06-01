@@ -42,7 +42,8 @@ gempos = zeros(size(db));
 seed = 1;
 z=1;
 while z < length(plist)
-    global seed
+    global z;
+    global seed;
     file = matopen(string("exp13res/poskeep", seed, ".mat"), "w")
     write(file, "poskeep", poskeep)
     close(file)
