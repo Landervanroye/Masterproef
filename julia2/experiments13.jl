@@ -43,11 +43,12 @@ seed = 1;
 z=1;
 while z < length(plist)
     global seed
-    file = matopen(string("exp12res/poskeep", seed, ".mat"), "w")
+    file = matopen(string("exp13res/poskeep", seed, ".mat"), "w")
     write(file, "poskeep", poskeep)
     close(file)
+
     info = [z,j,lr[z],stationary];
-    file = matopen(string("exp12res/info", seed, ".mat"), "w")
+    file = matopen(string("exp13res/info", seed, ".mat"), "w")
     write(file, "info", info)
     close(file)
 
@@ -79,6 +80,10 @@ while z < length(plist)
 
     rng = MersenneTwister(1234+seed);
     grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2, db ,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
+
+    file = matopen(string("exp13res/grad", grad, ".mat"), "w")
+    write(file, "grad", grad)
+    close(file)
 
     db = db .- lrlist[z]*grad';
 
