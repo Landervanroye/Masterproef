@@ -14,7 +14,7 @@ Np0 = 100;
 
 a = Nb0/Np0^(1/3);
 b = N0/Np0^(2/3);
-plist = zeros(1,100);
+plist = zeros(1,20);
 Nlist = zeros(size(plist));
 lrlist = zeros(size(plist));
 Nblist = zeros(size(plist));
@@ -54,7 +54,7 @@ while z < length(plist)
     write(file, "poskeep", poskeep)
     close(file)
 
-    info = [z,j,lr[z],stationary];
+    info = [z,j,lrist[z],stationary];
     file = matopen(string("exp13res/info", seed, ".mat"), "w")
     write(file, "info", info)
     close(file)
