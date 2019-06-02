@@ -14,14 +14,14 @@ Np0 = 100;
 
 a = Nb0/Np0^(1/3);
 b = N0/Np0^(2/3);
-plist = zeros(1,40);
+plist = zeros(1,100);
 Nlist = zeros(size(plist));
 lrlist = zeros(size(plist));
 Nblist = zeros(size(plist));
 lr = 1.0;
 Np = Np0;
 
-for i = 1:40
+for i = 1:100
     global Np;
     global lr;
     plist[i] = Int64(Np);
