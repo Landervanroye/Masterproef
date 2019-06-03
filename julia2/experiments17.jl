@@ -23,7 +23,7 @@ Nblist = zeros(size(plist));
 lr = 1.0;
 Np = Np0;
 
-for i = 1:20
+for i = 1:12
     global Np;
     global lr;
     plist[i] = Int64(Np);
@@ -31,7 +31,7 @@ for i = 1:20
     Nblist[i] = Int64(ceil(a*Np^(1.0/3)));
     lrlist[i] = lr;
 
-    lr = lr/2;
+    lr = lr/4;
     Np = ceil((Np0/sqrt(lr)));
 end
 
@@ -119,7 +119,7 @@ while z < length(plist)
         stationary = false;
         j = 1;
         z = z+1;
-        steps = ceil(steps*2);
+        steps = ceil(steps*4);
     end
 
     seed = seed + 1;
