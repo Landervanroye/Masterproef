@@ -32,7 +32,7 @@ for i = 1:20
     lrlist[i] = lr;
 
     lr = lr/1.5;
-    Np = ceil((Np0/sqr(lr)));
+    Np = ceil((Np0/sqrt(lr)));
 end
 
 db = [0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8];
