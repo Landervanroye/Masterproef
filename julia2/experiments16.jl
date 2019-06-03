@@ -108,7 +108,7 @@ while z < length(plist)
     end
     gradv = grad;
     if stationary && j == steps
-        db = gempos;
+        #db = gempos;
         file = matopen(string("exp16res/gempos", seed, ".mat"), "w")
         write(file, "gempos", gempos)
         close(file)
