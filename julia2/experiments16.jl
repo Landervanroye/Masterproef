@@ -53,7 +53,7 @@ while z < length(plist)
     global gempos;
     global steps;
     file = matopen(string("exp16res/poskeep", seed, ".mat"), "w")
-    write(file, "poskeep", poskeep)
+    write(file, "poskeep", db)
     close(file)
 
     info = [z,j,lrlist[z],stationary, steps];
