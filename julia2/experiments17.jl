@@ -31,7 +31,7 @@ for i = 1:20
     Nblist[i] = Int64(ceil(a*Np^(1.0/3)));
     lrlist[i] = lr;
 
-    lr = lr/1.5;
+    lr = lr/2;
     Np = ceil((Np0/sqrt(lr)));
 end
 
@@ -119,7 +119,7 @@ while z < length(plist)
         stationary = false;
         j = 1;
         z = z+1;
-        steps = ceil(steps*1.5);
+        steps = ceil(steps*2);
     end
 
     seed = seed + 1;
