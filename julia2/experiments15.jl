@@ -55,7 +55,7 @@ while z < length(plist)
     close(file)
 
     info = [z,j,lrlist[z],stationary];
-    file = matopen(string("exp13res/info", seed, ".mat"), "w")
+    file = matopen(string("exp15res/info", seed, ".mat"), "w")
     write(file, "info", info)
     close(file)
 
