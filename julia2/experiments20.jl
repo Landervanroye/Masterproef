@@ -8,16 +8,13 @@ include("core.jl")
 #plist = [10^(i) for i in v];
 gradsave = zeros(50,10);
 
-N0 = 10;
-Nb0 = 100;
-Np0 = 1000;
+N0 = 5;
+Nb0 = 10;
+Np0 = 100;
 
 a = Nb0/Np0^(1/3);
 b = N0/Np0^(2/3);
 
-N0 = 5;
-Nb0 = 5;
-Np0 = 50;
 
 plist = zeros(1,20);
 Nlist = zeros(size(plist));
