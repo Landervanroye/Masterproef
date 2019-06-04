@@ -51,7 +51,7 @@ while z < length(plist)
     global gradv;
     global gempos;
     file = matopen(string("exp14res/poskeep", seed, ".mat"), "w")
-    write(file, "poskeep", poskeep)
+    write(file, "poskeep", db)
     close(file)
 
     info = [z,j,lrlist[z],stationary];
