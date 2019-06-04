@@ -106,11 +106,11 @@ while z < length(plist)
         close(file)
         gradv = zeros(size(db));
         gempos = zeros(size(db));
-        j = 1;
+        j = 0;
         z = z+1;
         steps = ceil(steps*1.5);
     end
-
+    j = j +1;
     seed = seed + 1;
     # z en j nog updaten!!
 end
