@@ -54,12 +54,12 @@ while z < length(plist)
     global gradv;
     global gempos;
     global steps;
-    file = matopen(string("exp22res/poskeep", seed, ".mat"), "w")
+    file = matopen(string("exp23res/poskeep", seed, ".mat"), "w")
     write(file, "poskeep", db)
     close(file)
 
     info = [z,j,lrlist[z],stationary, steps];
-    file = matopen(string("exp22res/info", seed, ".mat"), "w")
+    file = matopen(string("exp23res/info", seed, ".mat"), "w")
     write(file, "info", info)
     close(file)
 
@@ -91,7 +91,7 @@ while z < length(plist)
 
     rng = MersenneTwister(1234+seed);
     grad= simulate_adjoint_MC_rng_alt(T,Uout_MC2, db ,samples_beg, weights_beg, rng,MC_discr.deltax,debdiscr.deltax,problem.nu, problem, debdiscr, MC_discr);
-    file = matopen(string("exp22res/grad", seed, ".mat"), "w")
+    file = matopen(string("exp23res/grad", seed, ".mat"), "w")
     write(file, "grad", grad)
     close(file)
     #print(size(db))
@@ -101,7 +101,7 @@ while z < length(plist)
 
     if j == steps
         #db = gempos;
-        file = matopen(string("exp22res/gempos", seed, ".mat"), "w")
+        file = matopen(string("exp23res/gempos", seed, ".mat"), "w")
         write(file, "gempos", gempos)
         close(file)
         gradv = zeros(size(db));
