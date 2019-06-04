@@ -111,6 +111,7 @@ while z < length(plist)
         steps = ceil(steps*1.5);
     end
     j = j +1;
+    gempos = gempos + db/steps;
     seed = seed + 1;
     # z en j nog updaten!!
 end
